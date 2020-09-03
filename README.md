@@ -2,3 +2,8 @@
 ## Keidy
 
 My first repository
+git add README.md 
+git status
+got commit -m "my first file"
+git status
+git push origin master
