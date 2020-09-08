@@ -12,5 +12,3 @@ got commit -m "my first file"
 git status 
 
 git push origin master
-
-git push origin master
