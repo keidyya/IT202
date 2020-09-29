@@ -1,1 +1,1 @@
-echo("hi this is my first file")
+hi this is my first file
