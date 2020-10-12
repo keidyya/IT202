@@ -1,5 +1,8 @@
 <?php require_once(__DIR__ . "/partials/nav.php"); ?>
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 //Note: we have this up here, so our update happens before our get/fetch
 //that way we'll fetch the updated data and have it correctly reflect on the form below
 //As an exercise swap these two and see how things change
