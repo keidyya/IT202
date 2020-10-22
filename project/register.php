@@ -21,7 +21,7 @@ if (isset($_POST["register"])) {
     $isValid = true;
     //check if passwords match on the server side
     if ($password == $confirm) {
-        echo "Passwords match <br>";
+        echo "Passwords match! <br>";
     }
     else {
         echo "Passwords don't match<br>";
@@ -42,7 +42,6 @@ if (isset($_POST["register"])) {
             $params = array(":email" => $email, ":username" => $username, ":password" => $hash);
             $r = $stmt->execute($params);
             //let's just see what's returned
-            echo "db returned: " . var_export($r, true);
             $e = $stmt->errorInfo();
             if ($e[0] == "00000") {
                 echo "<br>Welcome! You successfully registered, please login.";
@@ -52,7 +51,7 @@ if (isset($_POST["register"])) {
                     echo "<br>Either username or email is already registered, please try again";
                 }
                 else {
-                    echo "uh oh something went wrong: " . var_export($e, true);
+                    echo "Uh oh something went wrong! ";
                 }
             }
         }
