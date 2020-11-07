@@ -11,7 +11,7 @@ if (!has_role("Admin")) {
 	<label>Name</label>
 	<input name="name" placeholder="Name"/>
 	<label>Score</label>
-	<input type="number" min="10000000000000" name="score"/>
+	<input type="number" min="1" name="score"/>
 	<input type="submit" name="save" value="Create"/>
 </form>
 
