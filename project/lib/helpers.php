@@ -68,6 +68,18 @@ function getMessages() {
     return array();
 }
 
+function getState($n) {
+    switch ($n) {
+        case 0:
+            echo "Won";
+            break;
+        case 1:
+            echo "Loss";
+            break;
+        default:
+            echo "Unsupported state: " . safer_echo($n);
+            break;
+    }
 //end flash
 ?>
 
