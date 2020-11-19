@@ -82,5 +82,3 @@ function getState($n) {
     }
 //end flash
 ?>
-
-?>

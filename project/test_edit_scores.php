@@ -16,10 +16,8 @@ if(isset($_GET["id"])){
 //saving
 if(isset($_POST["save"])){
 	//TODO add proper validation/checks
-	$name = $_POST["name"];
 	$score = $_POST["score"];
 	$user = get_user_id();
-	$db = getDB();
 	if(isset($id)){
 		$stmt = $db->prepare("UPDATE Scores set score=:score where id=:id");
 		//$stmt = $db->prepare("INSERT INTO F20_Eggs (name, state, base_rate, mod_min, mod_max, next_stage_time, user_id) VALUES(:name, :state, :br, :min,:max,:nst,:user)");
@@ -54,11 +52,10 @@ if(isset($id)){
 
 <form method="POST">
 	<label>Name</label>
-	<input name="name" placeholder="Name"/>
 	<label>Score</label>
 	<input type="number" min="1" name="score"/>
 	<input type="submit" name="save" value="Update"/>
 </form>
 
 
-<?php require(__DIR__ . "/partials/flash.php");
+<?php require(__DIR__ . "/partials/flash.php");?>

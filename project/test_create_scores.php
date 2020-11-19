@@ -18,14 +18,13 @@ if (!has_role("Admin")) {
 <?php
 if(isset($_POST["save"])){
 	//TODO add proper validation/checks
-	$name = $_POST["id"];
+	$name = $_POST["name"];
 	$score = $_POST["score"];
   $points = $_POST["points_change"];
 	$user = get_user_id();
 	$db = getDB();
-	$stmt = $db->prepare("INSERT INTO Scores (id, user_id, score) VALUES(:id, :user, :score)");
+	$stmt = $db->prepare("INSERT INTO Scores (user_id, score) VALUES(:user, :score)");
 	$r = $stmt->execute([
-		":id"=>$name,
 		":score"=>$score,
 		":user"=>$user
 	]);
@@ -38,4 +37,4 @@ if(isset($_POST["save"])){
 	}
 }
 ?>
-<?php require(__DIR__ . "/partials/flash.php");
+<?php require(__DIR__ . "/partials/flash.php");?>
