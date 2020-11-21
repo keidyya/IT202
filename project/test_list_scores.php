@@ -38,7 +38,7 @@ if (isset($_POST["search"]) && !empty($query)) {
                         <div><?php safer_echo($r["name"]); ?></div>
                     </div>
                     <div>
-                        <div>Next Stage:</div>
+                        <div>Score:</div>
                         <div><?php safer_echo($r["score"]); ?></div>
                     </div>
                     <div>
