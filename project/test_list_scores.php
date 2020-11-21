@@ -14,7 +14,7 @@ if (isset($_POST["query"])) {
 }
 if (isset($_POST["search"]) && !empty($query)) {
     $db = getDB();
-    $stmt = $db->prepare("SELECT id,name,scores from Scores WHERE name like :q LIMIT 10");
+    $stmt = $db->prepare("SELECT id,scores from Scores WHERE name like :q LIMIT 10");
     $r = $stmt->execute([":q" => "%$query%"]);
     if ($r) {
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -38,20 +38,16 @@ if (isset($_POST["search"]) && !empty($query)) {
                         <div><?php safer_echo($r["name"]); ?></div>
                     </div>
                     <div>
-                        <div>State:</div>
-                        <div><?php getState($r["state"]); ?></div>
-                    </div>
-                    <div>
                         <div>Next Stage:</div>
-                        <div><?php safer_echo($r["next_stage_time"]); ?></div>
+                        <div><?php safer_echo($r["score"]); ?></div>
                     </div>
                     <div>
                         <div>Owner Id:</div>
                         <div><?php safer_echo($r["user_id"]); ?></div>
                     </div>
                     <div>
-                        <a type="button" href="test_edit_egg.php?id=<?php safer_echo($r['id']); ?>">Edit</a>
-                        <a type="button" href="test_view_egg.php?id=<?php safer_echo($r['id']); ?>">View</a>
+                        <a type="button" href="test_edit_scores.php?id=<?php safer_echo($r['id']); ?>">Edit</a>
+                        <a type="button" href="test_view_scores.php?id=<?php safer_echo($r['id']); ?>">View</a>
                     </div>
                 </div>
             <?php endforeach; ?>

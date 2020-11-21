@@ -80,5 +80,6 @@ function getState($n) {
             echo "Unsupported state: " . safer_echo($n);
             break;
     }
+}
 //end flash
 ?>
