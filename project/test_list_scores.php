@@ -14,8 +14,8 @@ if (isset($_POST["query"])) {
 }
 if (isset($_POST["search"]) && !empty($query)) {
     $db = getDB();
-    $stmt = $db->prepare("SELECT id,scores from Scores WHERE name like :q LIMIT 10");
-    $r = $stmt->execute([":q" => "%$query%"]);
+    $stmt = $db->prepare("SELECT score from Scores where user_id = :id");
+    $r = $stmt->execute([":id"=>get_user_id()]);
     if ($r) {
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -34,16 +34,8 @@ if (isset($_POST["search"]) && !empty($query)) {
             <?php foreach ($results as $r): ?>
                 <div class="list-group-item">
                     <div>
-                        <div>Name:</div>
-                        <div><?php safer_echo($r["name"]); ?></div>
-                    </div>
-                    <div>
                         <div>Score:</div>
                         <div><?php safer_echo($r["score"]); ?></div>
-                    </div>
-                    <div>
-                        <div>Owner Id:</div>
-                        <div><?php safer_echo($r["user_id"]); ?></div>
                     </div>
                     <div>
                         <a type="button" href="test_edit_scores.php?id=<?php safer_echo($r['id']); ?>">Edit</a>

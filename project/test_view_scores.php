@@ -17,7 +17,8 @@ if (isset($_GET["id"])) {
 $result = [];
 if (isset($id)) {
     $db = getDB();
-    $stmt = $db->prepare("SELECT Scores.id, user_id, scores Users.username FROM Scores as Scores JOIN Users on Scores.user_id = Users.id where Scores.id = :id");
+    $stmt = $db->prepare("SELECT Scores.id, user_id, score, Users.username FROM Scores JOIN Users on Scores.user_id = Users.id where Scores.id = :id");
+    echo var_export($stmt->errorInfo(), true);
     $r = $stmt->execute([":id" => $id]);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     if (!$result) {
@@ -41,5 +42,6 @@ if (isset($id)) {
     </div>
 <?php else: ?>
     <p>Error looking up id...</p>
+  
 <?php endif; ?>
 <?php require(__DIR__ . "/partials/flash.php");?>
