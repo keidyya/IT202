@@ -17,7 +17,7 @@ if (isset($_GET["id"])) {
 $result = [];
 if (isset($id)) {
     $db = getDB();
-    $stmt = $db->prepare("SELECT Scores.id, user_id, scores Users.username FROM Scores as Scores JOIN Users on Scores.user_id = Users.id where Scores.id = :id");
+    $stmt = $db->prepare("SELECT PointsHistory.id, user_id, points_change, Users.username FROM PointsHistory JOIN Users on PointsHistory.user_id = Users.id where PointsHistory.id = :id");
     $r = $stmt->execute([":id" => $id]);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     if (!$result) {
@@ -28,18 +28,16 @@ if (isset($id)) {
 ?>
 <?php if (isset($result) && !empty($result)): ?>
     <div class="card">
-        <div class="card-title">
-            <?php safer_echo($result["name"]); ?>
-        </div>
         <div class="card-body">
             <div>
                 <p>Stats</p>
-                <div>Score: <?php safer_echo($result["scores"]); ?></div>
+                <div>Score: <?php safer_echo($result["points_change"]); ?></div>
                 <div>Owned by: <?php safer_echo($result["username"]); ?></div>
             </div>
         </div>
     </div>
 <?php else: ?>
     <p>Error looking up id...</p>
+  
 <?php endif; ?>
 <?php require(__DIR__ . "/partials/flash.php");?>

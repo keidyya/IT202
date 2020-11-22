@@ -11,8 +11,10 @@ require_once(__DIR__ . "/../lib/helpers.php");
         <li><a href="register.php">Register</a></li>
     <?php endif; ?>
     <?php if (has_role("Admin")): ?>
-            <li><a href="test_create_scores.php">Create Egg</a></li>
-            <li><a href="test_list_scores.php">View Eggs</a></li>
+            <li><a href="test_create_scores.php">Newest Scores</a></li>
+             <li><a href="test_list_scores.php">Search Scores</a></li>
+              <li><a href="test_create_pointh.php">Newest Points</a></li>
+             <li><a href="test_list_pointh.php">Search Points</a></li>
     <?php endif; ?>
     <?php if (is_logged_in()): ?>
         <li><a href="profile.php">Profile</a></li>

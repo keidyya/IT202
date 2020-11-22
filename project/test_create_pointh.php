@@ -13,7 +13,7 @@ if (!has_role("Admin")) {
 	<label>Score</label>
 	<input type="number" min="1" name="score"/>
   <label>Reason</label>
-   <input type="text" max="60" placeholder="win, lose, purchase, etc" name="reason"/>
+   <input type="text" max="60" name="reason"/>
 	<input type="submit" name="save" value="Create"/>
 </form>
 
@@ -27,7 +27,7 @@ if(isset($_POST["save"])){
 	$db = getDB();
 	$stmt = $db->prepare("INSERT INTO PointsHistory (user_id, points_change, reason) VALUES(:user, :points_change, :reason)");
 	$r = $stmt->execute([
-		":score"=>$score,
+		":points_change"=>$score,
 		":user"=>$user,
    ":reason"=>$reason
    	]);

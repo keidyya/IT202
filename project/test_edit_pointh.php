@@ -16,15 +16,14 @@ if(isset($_GET["id"])){
 //saving
 if(isset($_POST["save"])){
 	//TODO add proper validation/checks
-	$name = $_POST["name"];
 	$score = $_POST["score"];
 	$user = get_user_id();
-	$db = getDB();
+  $db = getDB();
 	if(isset($id)){
-		$stmt = $db->prepare("UPDATE Scores set score=:score where id=:id");
+		$stmt = $db->prepare("UPDATE Scores set score=:points_change where id=:id");
 		//$stmt = $db->prepare("INSERT INTO F20_Eggs (name, state, base_rate, mod_min, mod_max, next_stage_time, user_id) VALUES(:name, :state, :br, :min,:max,:nst,:user)");
 		$r = $stmt->execute([
-			":score"=>$score,
+			":points_change"=>$score,
 			":id"=>$id
 		]);
 		if($r){
@@ -53,8 +52,6 @@ if(isset($id)){
 ?>
 
 <form method="POST">
-	<label>Name</label>
-	<input name="name" placeholder="Name"/>
 	<label>Score</label>
 	<input type="number" min="1" name="score"/>
 	<input type="submit" name="save" value="Update"/>

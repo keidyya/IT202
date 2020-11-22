@@ -52,7 +52,6 @@ if(isset($id)){
 ?>
 
 <form method="POST">
-	<label>Name</label>
 	<label>Score</label>
 	<input type="number" min="1" name="score"/>
 	<input type="submit" name="save" value="Update"/>
