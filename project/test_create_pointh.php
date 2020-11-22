@@ -12,23 +12,25 @@ if (!has_role("Admin")) {
 	<input name="name" placeholder="Name"/>
 	<label>Score</label>
 	<input type="number" min="1" name="score"/>
+  <label>Reason</label>
+  <input type="text" name="reason"/>
 	<input type="submit" name="save" value="Create"/>
 </form>
 
 <?php
 if(isset($_POST["save"])){
 	//TODO add proper validation/checks
-	$name = $_POST["id"];
+	$name = $_POST["name"];
 	$score = $_POST["score"];
-  $points = $_POST["points_change"];
+  $reason = $_POST["reason"];
 	$user = get_user_id();
 	$db = getDB();
-	$stmt = $db->prepare("INSERT INTO Scores (id, user_id, score) VALUES(:id, :user, :score)");
+	$stmt = $db->prepare("INSERT INTO PointsHistory (user_id, points_change, reason) VALUES(:user, :points_change, :reason)");
 	$r = $stmt->execute([
-		":id"=>$name,
 		":score"=>$score,
-		":user"=>$user
-	]);
+		":user"=>$user,
+   ":reason"=>$reason
+   	]);
 	if($r){
 		flash("Created successfully with id: " . $db->lastInsertId());
 	}
