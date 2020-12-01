@@ -1,201 +1,124 @@
-// Collect The Square game
+const player = "X";
+const computer = "O";
 
-// Get a reference to the canvas DOM element
-var canvas = document.getElementById('canvas');
-// Get the canvas drawing context
-var context = canvas.getContext('2d');
+let board_full = false;
+let play_board = ["", "", "", "", "", "", "", "", ""];
 
-// Your score
-var score = 0;
+const board_container = document.querySelector(".play-area");
 
-// Properties for your square
-var x = 50; // X position
-var y = 100; // Y position
-var speed = 8; // Distance to move each frame
-var sideLength = 50; // Length of each side of the square
+const winner_statement = document.getElementById("winner");
 
-// FLags to track which keys are pressed
-var down = false;
-var up = false;
-var right = false;
-var left = false;
+check_board_complete = () => {
+  let flag = true;
+  play_board.forEach(element => {
+    if (element != player && element != computer) {
+      flag = false;
+    }
+  });
+  board_full = flag;
+};
 
-// Properties for the target square
-var targetX = 0;
-var targetY = 0;
-var targetLength = 25;
 
-// Determine if number a is within the range b to c (exclusive)
-function isWithin(a, b, c) {
-  return (a > b && a < c);
-}
+const check_line = (a, b, c) => {
+  return (
+    play_board[a] == play_board[b] &&
+    play_board[b] == play_board[c] &&
+    (play_board[a] == player || play_board[a] == computer)
+  );
+};
 
-// Countdown timer (in seconds)
-var countdown = 30;
-// ID to track the setTimeout
-var id = null;
-
-// Listen for keydown events
-canvas.addEventListener('keydown', function(event) {
-  event.preventDefault();
-  console.log(event.key, event.keyCode);
-  if (event.keyCode === 40) { // DOWN
-    down = true;
-  }
-  if (event.keyCode === 38) { // UP
-    up = true;
-  }
-  if (event.keyCode === 37) { // LEFT
-    left = true;
-  }
-  if (event.keyCode === 39) { // RIGHT
-    right = true;
-  }
-});
-
-// Listen for keyup events
-canvas.addEventListener('keyup', function(event) {
-  event.preventDefault();
-  console.log(event.key, event.keyCode);
-  if (event.keyCode === 40) { // DOWN
-    down = false;
-  }
-  if (event.keyCode === 38) { // UP
-    up = false;
-  }
-  if (event.keyCode === 37) { // LEFT
-    left = false;
-  }
-  if (event.keyCode === 39) { // RIGHT
-    right = false;
-  }
-});
-
-// Show the start menu
-function menu() {
-  erase();
-  context.fillStyle = '#000000';
-  context.font = '36px Arial';
-  context.textAlign = 'center';
-  context.fillText('Collect the Square!', canvas.width / 2, canvas.height / 4);
-  context.font = '24px Arial';
-  context.fillText('Click to Start', canvas.width / 2, canvas.height / 2);
-  context.font = '18px Arial'
-  context.fillText('Use the arrow keys to move', canvas.width / 2, (canvas.height / 4) * 3);
-  // Start the game on a click
-  canvas.addEventListener('click', startGame);
-}
-
-// Start the game
-function startGame() {
-	// Reduce the countdown timer ever second
-  id = setInterval(function() {
-    countdown--;
-  }, 1000)
-  // Stop listening for click events
-  canvas.removeEventListener('click', startGame);
-  // Put the target at a random starting point
-	moveTarget();
-  // Kick off the draw loop
-  draw();
-}
-
-// Show the game over screen
-function endGame() {
-	// Stop the countdown
-  clearInterval(id);
-  // Display the final score
-  erase();
-  context.fillStyle = '#000000';
-  context.font = '24px Arial';
-  context.textAlign = 'center';
-  context.fillText('Final Score: ' + score, canvas.width / 2, canvas.height / 2);
-}
-
-// Move the target square to a random position
-function moveTarget() {
-  targetX = Math.round(Math.random() * canvas.width - targetLength);
-  targetY = Math.round(Math.random() * canvas.height - targetLength)
-}
-
-// Clear the canvas
-function erase() {
-  context.fillStyle = '#FFFFFF';
-  context.fillRect(0, 0, 600, 400);
-}
-
-// The main draw loop
-function draw() {
-  erase();
-  // Move the square
-  if (down) {
-    y += speed;
-  }
-  if (up) {
-    y -= speed;
-  }
-  if (right) {
-    x += speed;
-  }
-  if (left) {
-    x -= speed;
-  }
-  // Keep the square within the bounds
-  if (y + sideLength > canvas.height) {
-    y = canvas.height - sideLength;
-  }
-  if (y < 0) {
-    y = 0;
-  }
-  if (x < 0) {
-    x = 0;
-  }
-  if (x + sideLength > canvas.width) {
-    x = canvas.width - sideLength;
-  }
-  // Collide with the target
-  if (isWithin(targetX, x, x + sideLength) || isWithin(targetX + targetLength, x, x + sideLength)) { // X
-    if (isWithin(targetY, y, y + sideLength) || isWithin(targetY + targetLength, y, y + sideLength)) { // Y
-      // Respawn the target
-      moveTarget();
-      // Increase the score
-      score++;
-      speed-=.25;
-      countdown+=2;
+const check_match = () => {
+  for (i = 0; i < 9; i += 3) {
+    if (check_line(i, i + 1, i + 2)) {
+      document.querySelector(`#block_${i}`).classList.add("win");
+      document.querySelector(`#block_${i + 1}`).classList.add("win");
+      document.querySelector(`#block_${i + 2}`).classList.add("win");
+      return play_board[i];
     }
   }
+  for (i = 0; i < 3; i++) {
+    if (check_line(i, i + 3, i + 6)) {
+      document.querySelector(`#block_${i}`).classList.add("win");
+      document.querySelector(`#block_${i + 3}`).classList.add("win");
+      document.querySelector(`#block_${i + 6}`).classList.add("win");
+      return play_board[i];
+    }
+  }
+  if (check_line(0, 4, 8)) {
+    document.querySelector("#block_0").classList.add("win");
+    document.querySelector("#block_4").classList.add("win");
+    document.querySelector("#block_8").classList.add("win");
+    return play_board[0];
+  }
+  if (check_line(2, 4, 6)) {
+    document.querySelector("#block_2").classList.add("win");
+    document.querySelector("#block_4").classList.add("win");
+    document.querySelector("#block_6").classList.add("win");
+    return play_board[2];
+  }
+  return "";
+};
 
-  
-// 
-  if (score >= 15){
-     context.fillStyle='red';
-     context.fillRect(x, y, canvas.height, canvas.width);
+const check_for_winner = () => {
+  let res = check_match()
+  if (res == player) {
+    winner.innerText = "Winner is player!!";
+    winner.classList.add("playerWin");
+    board_full = true
+  } else if (res == computer) {
+    winner.innerText = "Winner is computer";
+    winner.classList.add("computerWin");
+    board_full = true
+  } else if (board_full) {
+    winner.innerText = "Draw!";
+    winner.classList.add("draw");
   }
-  // Draw the square
-  context.fillStyle = '#FF0000';
-  context.fillRect(x, y, sideLength, sideLength);
-  // Draw the target 
-  context.fillStyle = '#00FF00';
-  context.fillRect(targetX, targetY, targetLength, targetLength);
+};
 
-  if (score >= 10){
-      context.fillStyle = '#64FF00';
-       context.fillRect(targetX*Math.random(), targetY*Math.random(), targetLength, targetLength);
-  }
-  // Draw the score and time remaining
-  context.fillStyle = '#000000';
-  context.font = '24px Arial';
-  context.textAlign = 'left';
-  context.fillText('Score: ' + score, 10, 24);
-  context.fillText('Time Remaining: ' + countdown, 10, 50);
-  // End the game or keep playing
-  if (countdown <= 0) {
-    endGame();
-  } else {
-    window.requestAnimationFrame(draw);
-  }
+
+const render_board = () => {
+  board_container.innerHTML = ""
+  play_board.forEach((e, i) => {
+    board_container.innerHTML += `<div id="block_${i}" class="block" onclick="addPlayerMove(${i})">${play_board[i]}</div>`
+    if (e == player || e == computer) {
+      document.querySelector(`#block_${i}`).classList.add("occupied");
+    }
+  });
+};
+
+const game_loop = () => {
+  render_board();
+  check_board_complete();
+  check_for_winner();
 }
 
-// Start the game
-menu();
-canvas.focus();
+const addPlayerMove = e => {
+  if (!board_full && play_board[e] == "") {
+    play_board[e] = player;
+    game_loop();
+    addComputerMove();
+  }
+};
+
+const addComputerMove = () => {
+  if (!board_full) {
+    do {
+      selected = Math.floor(Math.random() * 9);
+    } while (play_board[selected] != "");
+    play_board[selected] = computer;
+    game_loop();
+  }
+};
+
+const reset_board = () => {
+  play_board = ["", "", "", "", "", "", "", "", ""];
+  board_full = false;
+  winner.classList.remove("playerWin");
+  winner.classList.remove("computerWin");
+  winner.classList.remove("draw");
+  winner.innerText = "";
+  render_board();
+};
+
+//initial render
+render_board();
