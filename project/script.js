@@ -1,5 +1,7 @@
 const player = "X";
 const computer = "O";
+const player_score = 0;
+const comp_score = 0;
 
 let board_full = false;
 let play_board = ["", "", "", "", "", "", "", "", ""];
@@ -63,10 +65,12 @@ const check_for_winner = () => {
   let res = check_match()
   if (res == player) {
     winner.innerText = "Winner is player!!";
+    player_score += 1;
     winner.classList.add("playerWin");
     board_full = true
   } else if (res == computer) {
     winner.innerText = "Winner is computer";
+    computer_score += 1;
     winner.classList.add("computerWin");
     board_full = true
   } else if (board_full) {
