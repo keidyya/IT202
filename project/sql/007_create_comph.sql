@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS `CompetitionParticipants` (
+	  `id` INT NOT NULL AUTO_INCREMENT
+	, `comp_id` INT NOT NULL AUTO_INCREMENT
+	, `user_id` INT NOT NULL AUTO_INCREMENT
+	, `created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+	, PRIMARY KEY (`id`)
+	, FOREIGN KEY (`user_id`) REFERENCES Users(`id`)
+    , FOREIGN KEY (`comp_id`) REFERENCES Competitions(`id`),
+	)
