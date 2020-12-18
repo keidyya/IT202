@@ -161,35 +161,47 @@ $results = $stmt->fetch(PDO::FETCH_ASSOC);
 if (isset($_GET["id"])) {
     $id = $_GET["id"];
 }
-?>
 <?php
-//fetching
-$result = [];
-if (isset($id)) {
+$query = "";
+$results = [];
+if (isset($_POST["query"])) {
+    $query = $_POST["query"];
+}
+if (isset($_POST["search"]) && !empty($query)) {
     $db = getDB();
-    $stmt = $db->prepare("SELECT Scores.id, user_id, score, Users.username FROM Scores JOIN Users on Scores.user_id = Users.id where Scores.id = :id");
-    $r = $stmt->execute([":id" => $id]);
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    if (!$result) {
-        $e = $stmt->errorInfo();
-        flash($e[2]);
+    $stmt = $db->prepare("SELECT score from Scores where user_id = :id");
+    $r = $stmt->execute([":id"=>get_user_id()]);
+    if ($r) {
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    else {
+        flash("There was a problem fetching the results");
     }
 }
 ?>
-<?php if (isset($result) && !empty($result)): ?>
-    <div class="card">
-        <div class="card-body">
-            <div>
-                <p>Stats</p>
-                <div>Score: <?php safer_echo($result["score"]); ?></div>
-                <div>Owned by: <?php safer_echo($result["username"]); ?></div>
-            </div>
+<form method="POST">
+    <input name="query" placeholder="Search" value="<?php safer_echo($query); ?>"/>
+    <input type="submit" value="Search" name="search"/>
+</form>
+<div class="results">
+    <?php if (count($results) > 0): ?>
+        <div class="list-group">
+            <?php foreach ($results as $r): ?>
+                <div class="list-group-item">
+                    <div>
+                        <div>Score:</div>
+                        <div><?php safer_echo($r["score"]); ?></div>
+                    </div>
+                    <div>
+                        <a type="button" href="test_edit_scores.php?id=<?php safer_echo($r['id']); ?>">Edit</a>
+                        <a type="button" href="test_view_scores.php?id=<?php safer_echo($r['id']); ?>">View</a>
+                    </div>
+                </div>
+            <?php endforeach; ?>
         </div>
-    </div>
-<?php else: ?>
-    <p>Error looking up id...</p>
-  
-<?php endif; ?>
-<?php require(__DIR__ . "/partials/flash.php");?>
+    <?php else: ?>
+        <p>No results</p>
+    <?php endif; ?>
+</div>
 
 <?php require(__DIR__ . "/partials/flash.php");
