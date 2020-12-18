@@ -141,28 +141,55 @@ if (isset($_POST["search"]) && !empty($query)) {
     }
 }
 ?>
-<form method="POST">
-    <input name="query" placeholder="Search" value="<?php safer_echo($query); ?>"/>
-    <input type="submit" value="Search" name="search"/>
-</form>
-<div class="results">
-    <?php if (count($results) > 0): ?>
-        <div class="list-group">
-            <?php foreach ($results as $r): ?>
-                <div class="list-group-item">
-                    <div>
-                        <div>Score:</div>
-                        <div><?php safer_echo($r["score"]); ?></div>
-                    </div>
-                    <div>
-                        <a type="button" href="test_edit_scores.php?id=<?php safer_echo($r['id']); ?>">Edit</a>
-                        <a type="button" href="test_view_scores.php?id=<?php safer_echo($r['id']); ?>">View</a>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-    <?php else: ?>
-        <p>No results</p>
-    <?php endif; ?>
+<?php
+$db = getDB();
+$points = [];
+
+$stmt = $db->prepare("SELECT points FROM Users WHERE id = :id");
+$stmt->execute([":id" => get_user_id()]);
+$results = $stmt->fetch(PDO::FETCH_ASSOC);
+?>
+<div>
+    <div>Current Points:</div>
+    <div><?php safer_echo($results["points"]); ?></div>
 </div>
+
+ <a href="my_competitions.php">Your Competitions</a>
+ 
+ <?php
+//we'll put this at the top so both php block have access to it
+if (isset($_GET["id"])) {
+    $id = $_GET["id"];
+}
+?>
+<?php
+//fetching
+$result = [];
+if (isset($id)) {
+    $db = getDB();
+    $stmt = $db->prepare("SELECT Scores.id, user_id, score, Users.username FROM Scores JOIN Users on Scores.user_id = Users.id where Scores.id = :id");
+    $r = $stmt->execute([":id" => $id]);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    if (!$result) {
+        $e = $stmt->errorInfo();
+        flash($e[2]);
+    }
+}
+?>
+<?php if (isset($result) && !empty($result)): ?>
+    <div class="card">
+        <div class="card-body">
+            <div>
+                <p>Stats</p>
+                <div>Score: <?php safer_echo($result["score"]); ?></div>
+                <div>Owned by: <?php safer_echo($result["username"]); ?></div>
+            </div>
+        </div>
+    </div>
+<?php else: ?>
+    <p>Error looking up id...</p>
+  
+<?php endif; ?>
+<?php require(__DIR__ . "/partials/flash.php");?>
+
 <?php require(__DIR__ . "/partials/flash.php");
